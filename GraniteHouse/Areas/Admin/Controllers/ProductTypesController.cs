@@ -43,5 +43,38 @@ namespace GraniteHouse.Areas.Admin.Controllers
             return View(productTypes);
         }
 
+        //GET Edit Action Method
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+
+            var productType = await _db.ProductTypes.FindAsync(id);
+            if (productType == null)
+            {
+                return NotFound();
+            }
+
+            return View(productType);
+        }
+
+        //POST Edit Action Method
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, ProductTypes productTypes)
+        {
+            if (ModelState.IsValid)
+            {
+                // Use .Update if you want to save changes for all properties
+                _db.Update(productTypes);
+                await _db.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(productTypes);
+        }
+
     }
 }
